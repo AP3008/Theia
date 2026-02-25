@@ -1,0 +1,11 @@
+# Binaries
+theia 
+*.exe
+*.exe~
+# Macos 
+.DS_Store
+.DS_Store?
+
+# For vs code & nvim
+.vscode/
+*.swp

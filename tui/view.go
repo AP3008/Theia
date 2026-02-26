@@ -7,7 +7,7 @@ import(
 
 func (m Model) View() string{
 	var str string
-	if !m.ShowDetails{
+	if !m.Settings.ShowDetails{
 		str = normalView(&m)
 	}
 	return str
@@ -23,7 +23,7 @@ func normalView(m *Model) string{
 		}
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, file.Name))
 	}
-	s.WriteString("\n [tab] enter  [backspace] back  [enter] select  [q] quit\n")
+	s.WriteString("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit\n")
 	return s.String()
 }
 

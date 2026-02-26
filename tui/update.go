@@ -35,7 +35,7 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 			newFiles := m.SystemFiles
 			if curr.IsDir{
 				var err error
-				newFiles, err = filesystem.CreateSystemFileList(curr.Path)	
+				newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden)	
 				if err != nil{
 					return m, nil
 				}
@@ -47,7 +47,7 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 
 		case "backspace":
 			parent := filepath.Dir(m.Path)
-			newFiles, err := filesystem.CreateSystemFileList(parent) 
+			newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden) 
 			if err != nil{
 				return m, nil
 			}

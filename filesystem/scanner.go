@@ -8,13 +8,16 @@ import (
 )
 
 // We Create a slice of SystemFiles to get a directory in a consumeable format
-func CreateSystemFileList(path string) ([]SystemFile, error) {
+func CreateSystemFileList(path string, allFiles bool) ([]SystemFile, error) {
 	itemList, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 	var directoryList []SystemFile
 	for _, value := range itemList {
+		if !allFiles && strings.HasPrefix(value.Name(), "."){
+			continue
+		}
 		sf, err := CreateSystemFile(value, path)
 		if err != nil {
 			fmt.Println("Error:", err, "File:", value.Name())

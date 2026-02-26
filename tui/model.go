@@ -28,7 +28,7 @@ func (m Model) Init() tea.Cmd{
 // Declares the initial model state
 
 func InitialModel(path string, configs Config) (Model, error){
-	fs_list, err := filesystem.CreateSystemFileList(path)
+	fs_list, err := filesystem.CreateSystemFileList(path, configs.ShowHidden)
 	if err != nil{
 		return Model{}, err
 	}

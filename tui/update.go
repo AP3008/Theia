@@ -2,6 +2,7 @@
 package tui
 
 import (
+	"path/filepath"
 	"theia/filesystem"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -25,6 +26,7 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 			} else {
 				m.Cursor = 0 
 			}
+
 		case "tab":
 			if len(m.SystemFiles) == 0 {
 				return m, nil
@@ -41,9 +43,23 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 			m.Path = curr.Path
 			m.SystemFiles = newFiles
 			m.Cursor = 0
-			if len(newFiles) > 0{
-				m.Selected = newFiles[0].Path
+			m.Selected = m.Path
+
+		case "backspace":
+			parent := filepath.Dir(m.Path)
+			newFiles, err := filesystem.CreateSystemFileList(parent) 
+			if err != nil{
+				return m, nil
 			}
+			m.SystemFiles = newFiles
+			m.Path = parent
+			m.Selected = m.Path
+			m.Cursor = 0
+		case "enter":
+			if len(m.SystemFiles) > 0 {
+				m.Selected = m.SystemFiles[m.Cursor].Path
+			}
+			return m, tea.Quit
 		}
 	}
 	return m, nil

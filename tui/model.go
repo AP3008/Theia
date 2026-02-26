@@ -6,12 +6,19 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// Defining the configs so I can add more flags easily without crowding the Model struct
+type Config struct {
+	ShowDetails bool
+	ShowHidden bool
+}
 type Model struct {
 	Path string 
 	SystemFiles []filesystem.SystemFile
 	Cursor int
 	Selected string
-	ShowDetails bool
+	Settings Config
+	TopRow int
+	Height int
 }
 
 func (m Model) Init() tea.Cmd{
@@ -20,7 +27,7 @@ func (m Model) Init() tea.Cmd{
 
 // Declares the initial model state
 
-func InitialModel(path string, details bool) (Model, error){
+func InitialModel(path string, configs Config) (Model, error){
 	fs_list, err := filesystem.CreateSystemFileList(path)
 	if err != nil{
 		return Model{}, err
@@ -34,6 +41,8 @@ func InitialModel(path string, details bool) (Model, error){
 		SystemFiles : fs_list,
 		Cursor : 0,
 		Selected : selected_str,
-		ShowDetails: details,
+		Settings: configs,
+		TopRow: 0,
+		Height: 20,
 	}, nil
 }

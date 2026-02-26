@@ -13,8 +13,14 @@ import (
 func main (){
 	// Define Flag
 	longFlag := flag.Bool("l", false, "Show detailed file info")
+	allFlag := flag.Bool("a", false, "Shows all files")
+	//editorFlag := flag.String("c", "nvim", "Opens code editor")
 	flag.Parse()
 
+	cfg := tui.Config{
+		ShowDetails: *longFlag,
+		ShowHidden: *allFlag,
+	}
 	//Determine the starting dir 
 	startPath := "."
 	args := flag.Args()
@@ -26,7 +32,7 @@ func main (){
 		fmt.Println("Error Starting: %v\n", err)
 		os.Exit(1)
 	}
-	m, err := tui.InitialModel(absPath, *longFlag)
+	m, err := tui.InitialModel(absPath, cfg)
 	if err != nil{
 		fmt.Println("Error Starting: %v\n", err)
 		os.Exit(1)

@@ -8,15 +8,15 @@ import (
 )
 
 // We Create a slice of SystemFiles to get a directory in a consumeable format
-func CreateSystemFileList (path string) ([]SystemFile, error){
+func CreateSystemFileList(path string) ([]SystemFile, error) {
 	itemList, err := os.ReadDir(path)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	var directoryList []SystemFile
-	for _, value := range itemList{
-		sf, err := CreateSystemFile(value, path)	
-		if err != nil{
+	for _, value := range itemList {
+		sf, err := CreateSystemFile(value, path)
+		if err != nil {
 			fmt.Println("Error:", err, "File:", value.Name())
 		}
 		directoryList = append(directoryList, sf)
@@ -27,13 +27,14 @@ func CreateSystemFileList (path string) ([]SystemFile, error){
 
 // Private helper to help sort the dir list
 // Because we are using slices we don't actually need to pass a reference
-func sortDirList(dl []SystemFile){
+func sortDirList(dl []SystemFile) {
 	n := len(dl)
-	for i := 0; i < n-1; i++{
-		for j:=0; j < n-i; j++{
+	for i := 0; i < n-1; i++ {
+		for j := 0; j < n-i; j++ {
 			name1 := strings.ToLower(dl[j].Name)
 			name2 := strings.ToLower(dl[j+1].Name)
-			if name1 < name2{
+			// Go checks every letter in this comparison
+			if name1 < name2 {
 				tmp := dl[j]
 				dl[j] = dl[j+1]
 				dl[j+1] = tmp

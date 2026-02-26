@@ -34,6 +34,7 @@ func normalView(m *Model, end int) string{
 }
 
 // Handles -l flag 
+// TODO: ADD BYTE CONVERSION PRIVATE FUNC & BETTER FORMATTING W/ SPACING
 func longView(m *Model, end int)string{
 	var s strings.Builder
 	s.WriteString(fmt.Sprintf("Exlporing: %s\n", m.Path))
@@ -64,5 +65,6 @@ func longView(m *Model, end int)string{
         )
         s.WriteString(line)
 	}
+	s.WriteString("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit\n")
 	return s.String()
 }

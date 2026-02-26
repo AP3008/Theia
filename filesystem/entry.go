@@ -2,7 +2,6 @@
 package filesystem
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"time"

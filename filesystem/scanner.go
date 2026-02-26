@@ -30,7 +30,7 @@ func CreateSystemFileList(path string) ([]SystemFile, error) {
 func sortDirList(dl []SystemFile) {
 	n := len(dl)
 	for i := 0; i < n-1; i++ {
-		for j := 0; j < n-i; j++ {
+		for j := 0; j < n-i-1; j++ {
 			name1 := strings.ToLower(dl[j].Name)
 			name2 := strings.ToLower(dl[j+1].Name)
 			// Go checks every letter in this comparison

@@ -4,8 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	tea "github.com/charmbracelet/bubbletea"
+	"path/filepath"
 	"theia/tui"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 func main (){
@@ -19,7 +21,12 @@ func main (){
 	if len(args) > 0{
 		startPath = args[0]
 	}
-	m, err := tui.InitialModel(startPath, *longFlag)
+	absPath, err := filepath.Abs(startPath)
+	if err != nil{
+		fmt.Println("Error Starting: %v\n", err)
+		os.Exit(1)
+	}
+	m, err := tui.InitialModel(absPath, *longFlag)
 	if err != nil{
 		fmt.Println("Error Starting: %v\n", err)
 		os.Exit(1)

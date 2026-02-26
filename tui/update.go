@@ -3,28 +3,35 @@ package tui
 
 import (
 	"path/filepath"
+
 	"theia/filesystem"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
-	switch msg := msg.(type){
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.String(){
+		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "up", "k":
-			if m.Cursor > 0{
+			if m.Cursor > 0 {
 				m.Cursor--
+				if m.Cursor < m.TopRow {
+					m.TopRow--
+				}
 			} else {
 				m.Cursor = len(m.SystemFiles) - 1
 			}
 		case "down", "j":
-			if m.Cursor < len(m.SystemFiles)-1{
+			if m.Cursor < len(m.SystemFiles)-1 {
 				m.Cursor++
+				if m.Cursor >= m.TopRow+m.Height {
+					m.TopRow++
+				}
 			} else {
-				m.Cursor = 0 
+				m.Cursor = 0
 			}
 
 		case "tab":
@@ -33,10 +40,10 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 			}
 			curr := m.SystemFiles[m.Cursor]
 			newFiles := m.SystemFiles
-			if curr.IsDir{
+			if curr.IsDir {
 				var err error
-				newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden)	
-				if err != nil{
+				newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden)
+				if err != nil {
 					return m, nil
 				}
 			}
@@ -47,8 +54,8 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 
 		case "backspace":
 			parent := filepath.Dir(m.Path)
-			newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden) 
-			if err != nil{
+			newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden)
+			if err != nil {
 				return m, nil
 			}
 			m.SystemFiles = newFiles
@@ -66,5 +73,4 @@ func (m Model) Update(msg tea.Msg)(tea.Model, tea.Cmd){
 		}
 	}
 	return m, nil
-}	
-
+}

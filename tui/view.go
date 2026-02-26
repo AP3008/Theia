@@ -7,18 +7,22 @@ import(
 
 func (m Model) View() string{
 	var str string
+	end := m.TopRow + m.Height
+	end = min(end, len(m.SystemFiles))
 	if !m.Settings.ShowDetails{
-		str = normalView(&m)
+		str = normalView(&m, end)
 	}
 	return str
 }
 
-func normalView(m *Model) string{
+func normalView(m *Model, end int) string{
 	var s strings.Builder
+	visibleFiles := m.SystemFiles[m.TopRow:end]
 	s.WriteString(fmt.Sprintf("Exploring: %s\n", m.Path))
-	for i, file := range m.SystemFiles{
+	for i, file := range visibleFiles{
+		actualIndex := i + m.TopRow
 		cursor := " "
-		if m.Cursor == i{
+		if m.Cursor == actualIndex{
 			cursor = ">"
 		}
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, file.Name))
@@ -27,7 +31,7 @@ func normalView(m *Model) string{
 	return s.String()
 }
 
-func longView(m *Model)string{
+func longView(m *Model, end int)string{
 	var s strings.Builder
 	s.WriteString(fmt.Sprintf("Exlporing: %s\n", m.Path))
 

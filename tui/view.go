@@ -6,6 +6,14 @@ import(
 )
 
 func (m Model) View() string{
+	var str string
+	if !m.ShowDetails{
+		str = normalView(&m)
+	}
+	return str
+}
+
+func normalView(m *Model) string{
 	var s strings.Builder
 	s.WriteString(fmt.Sprintf("Exploring: %s\n", m.Path))
 	for i, file := range m.SystemFiles{
@@ -19,3 +27,9 @@ func (m Model) View() string{
 	return s.String()
 }
 
+func longView(m *Model)string{
+	var s strings.Builder
+	s.WriteString(fmt.Sprintf("Exlporing: %s\n", m.Path))
+
+	return s.String()
+}

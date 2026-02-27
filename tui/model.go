@@ -10,6 +10,7 @@ import (
 type Config struct {
 	ShowDetails bool
 	ShowHidden bool
+	CDMode bool
 }
 type Model struct {
 	Path string 

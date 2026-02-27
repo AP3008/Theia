@@ -14,12 +14,38 @@ func main (){
 	// Define Flag
 	longFlag := flag.Bool("l", false, "Show detailed file info")
 	allFlag := flag.Bool("a", false, "Shows all files")
-	//editorFlag := flag.String("c", "nvim", "Opens code editor")
+	initFlag := flag.Bool("init", false, "Sets up shell integration")
+	cdFlag := flag.Bool("cd", false, "Changes directory on selection")
+
 	flag.Parse()
 
 	cfg := tui.Config{
 		ShowDetails: *longFlag,
 		ShowHidden: *allFlag,
+		CDMode: *cdFlag,
+	}
+
+	// For shell intigration 
+
+	if *initFlag{
+		fmt.Print(`
+			th(){
+				local target 
+				target=$(command theia "$@")
+
+				if [ -z "$target" ]; then
+					return 
+				fi
+				if [[ "$*" == *"-cd"* ]]; then
+					if [ -d "$target" ];
+						then cd "$target"
+					fi 
+				else 
+					echo "$target"
+				fi
+			}
+		`)
+		return 
 	}
 	//Determine the starting dir 
 	startPath := "."

@@ -59,7 +59,7 @@ func (m Model) View() string{
 func normalView(m *Model, end int) string{
 	var s strings.Builder
 	visibleFiles := m.SystemFiles[m.TopRow:end]
-	header := headerStyle.Render(fmt.Sprintf("Exploring: " + tildaPath(m.Path)))
+	header := headerStyle.Render(fmt.Sprintf("  Exploring: " + tildaPath(m.Path)))
 	s.WriteString(header + "\n")
 	for i, file := range visibleFiles{
 		actualIndex := i + m.TopRow
@@ -109,7 +109,7 @@ const (
 // Handles -l flag 
 func longView(m *Model, end int)string{
 	var s strings.Builder
-	explorer := headerStyle.Render(fmt.Sprintf("Exploring: " + tildaPath(m.Path)))
+	explorer := headerStyle.Render(fmt.Sprintf("  Exploring: " + tildaPath(m.Path)))
 	s.WriteString(explorer + "\n")
 	
 	// Header

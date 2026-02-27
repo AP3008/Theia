@@ -36,7 +36,7 @@ func normalView(m *Model, end int) string{
 // Handles -l flag 
 func longView(m *Model, end int)string{
 	var s strings.Builder
-	s.WriteString(fmt.Sprintf("Exlporing: %s\n", m.Path))
+	s.WriteString(fmt.Sprintf("Exlporing: %s\n\n", m.Path))
 	
 	// Header
 	//Escape Code for underlined 

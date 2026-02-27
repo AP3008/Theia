@@ -83,7 +83,7 @@ func normalView(m *Model, end int) string{
 var (
 	// Column headings
 	columnHeaderStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#5C6370")).
+		Foreground(lipgloss.Color("#FFFFFF")).
 		Underline(true).
 		Bold(true)
 	
@@ -109,29 +109,18 @@ const (
 // Handles -l flag 
 func longView(m *Model, end int)string{
 	var s strings.Builder
-	s.WriteString(fmt.Sprintf("Exlporing: %s\n\n", tildaPath(m.Path)))
+	explorer := headerStyle.Render(fmt.Sprintf("Exploring: " + tildaPath(m.Path)))
+	s.WriteString(explorer + "\n")
 	
 	// Header
-	//Escape Code for underlined 
-	u := "\033[4m"
-	r := "\033[0m"
-
-	// Column widths
-	const (
-		modeW = 10
-		sizeW = 8
-		modW  = 12
-	)
-
-	s.WriteString("  ") 
-	
-	s.WriteString(fmt.Sprintf("%s%s%s%*s ", u, "MODE", r, modeW-len("MODE"), ""))
-	
-	s.WriteString(fmt.Sprintf("%s%s%s%*s ", u, "SIZE", r, sizeW-len("SIZE"), ""))
-	
-	s.WriteString(fmt.Sprintf("%s%s%s%*s ", u, "MODIFIED", r, modW-len("MODIFIED"), ""))
-	
-	s.WriteString(fmt.Sprintf("%s%s%s\n", u, "NAME", r))
+	header := lipgloss.JoinHorizontal(lipgloss.Top,
+        "  ",
+        columnHeaderStyle.Width(modeW).Render("MODE"),
+        columnHeaderStyle.Width(sizeW).Render("SIZE"),
+        columnHeaderStyle.Width(modW).Render("MODIFIED"),
+        columnHeaderStyle.Render("NAME"),
+    )
+    s.WriteString(header + "\n")
 
 	visibleFiles := m.SystemFiles[m.TopRow:end]
 
@@ -139,21 +128,51 @@ func longView(m *Model, end int)string{
 		actualIndex := i + m.TopRow
 		cursor := " "
 		if m.Cursor == actualIndex{
-			cursor = ">"
+			cursor = cursorStyle.Render("> ")
 		}
+
+		// perm handling 
+
+		perm := permStyler(file.Permission.String())
+		permBlock := lipgloss.NewStyle().Width(modeW).Render(perm)
+
+		// size handling
 
 		sizeStr := "-"
 		if !file.IsDir{
 			sizeStr = formatBytes(file.Size)
 		}
-		line := fmt.Sprintf("%s %-10s %8s %-12s %s\n",
+		size := sizeStyle.Width(sizeW).Align(lipgloss.Right).Render(sizeStr)
+		
+		// Date handling
+		
+		date := dateStyle.Width(modW).Render(file.ModifiedTime.Format("Jan 02 15:04"))
+
+		// Name handling
+		
+		var name string
+        if file.IsDir {
+            name = dirStyle.Render(file.Name + "/")
+        } else {
+            name = regStyle.Render(file.Name)
+        }
+		if file.IsSymLink{
+			name = symlinkStyle.Render(name)
+		}
+
+		// line creation 
+
+		line := lipgloss.JoinHorizontal(lipgloss.Top,
             cursor,
-            file.Permission.String(), 
-            sizeStr,
-            file.ModifiedTime.Format("Jan 02 15:04"), 
-    	        file.Name,
+            permBlock,
+            " ",
+            size,
+            " ", 
+            date,
+            " ", 
+            name,
         )
-        s.WriteString(line)
+        s.WriteString(line + "\n")
 	}
 	info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit [ctrl+o] return this directory\n")
 	s.WriteString(info)

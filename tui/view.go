@@ -12,9 +12,9 @@ var (
 	// header styling 
 	headerStyle = lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#FAFAFA"))
+		Foreground(lipgloss.Color("#FAFAFA")).
 		//Padding(0, 1).
-		//MarginBottom(1)
+		MarginBottom(1)
 	
 	// cursor style
 	cursorStyle = lipgloss.NewStyle().
@@ -45,7 +45,7 @@ var (
         Bold(true).
         Foreground(lipgloss.Color("#ABB2BF"))
 
-	// Design for colour
+	// Design for colour button info
 	infoStyle = lipgloss.NewStyle().
 		Foreground(lipgloss.Color("#82827E"))
 )
@@ -65,24 +65,25 @@ func (m Model) View() string{
 func normalView(m *Model, end int) string{
 	var s strings.Builder
 	visibleFiles := m.SystemFiles[m.TopRow:end]
-	header := headerStyle.Render(fmt.Sprintf("Exploring: %s\n\n", tildaPath(m.Path)))
-	s.WriteString(header)
+	header := headerStyle.Render(fmt.Sprintf("Exploring: " + tildaPath(m.Path)))
+	s.WriteString(header + "\n")
 	for i, file := range visibleFiles{
 		actualIndex := i + m.TopRow
 		cursor := " "
 		if m.Cursor == actualIndex{
 			cursor = cursorStyle.Render("> ")
 		}
-		name := file.Name
+		name := regStyle.Render(file.Name)
 		if file.IsDir{
 			name = dirStyle.Render(file.Name + "/")
 		}
 		if file.IsSymLink{
-			name = 
+			name = symlinkStyle.Render(name) 
 		}
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
 	}
-	s.WriteString("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit\n")
+	info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit\n")
+	s.WriteString(info)
 	return s.String()
 }
 

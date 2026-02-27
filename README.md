@@ -74,7 +74,8 @@ mv theia /usr/local/bin/
 Add this snippet to ~/.zshrc or ~/.bashrc file
 
 ```bash
-eval "$(theia --init)"
+eval "$(theia --init)" 
+source .zshrc
 ```
 ## LICENSE
 

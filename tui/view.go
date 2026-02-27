@@ -193,15 +193,16 @@ func tildaPath(path string) string{
 
 func permStyler(perm string) string{
 	var s strings.Builder
-	for _, c := range perm{
-		switch c{
+	for _, char := range perm{
+		c := string(char)
+		switch c {
 		case "r":
 			s.WriteString(lipgloss.NewStyle().Foreground(iris).Render(c))
 		case "w":
 			s.WriteString(lipgloss.NewStyle().Foreground(pine).Render(c))
 		case "x":
 			s.WriteString(lipgloss.NewStyle().Foreground(love).Render(c))
-		case"d"|"l":
+		case"d","l":
 			s.WriteString(lipgloss.NewStyle().Foreground(love).Render(c))
 		default:
 			s.WriteString(lipgloss.NewStyle().Foreground(muted).Render(c))

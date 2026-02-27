@@ -46,12 +46,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if err != nil {
 					return m, nil
 				}
+
+				m.Path = curr.Path
+				m.SystemFiles = newFiles
+				m.Cursor = 0
+				m.TopRow = 0
+				m.Selected = m.Path
 			}
-			m.Path = curr.Path
-			m.SystemFiles = newFiles
-			m.Cursor = 0
-			m.TopRow = 0
-			m.Selected = m.Path
 
 		case "backspace":
 			parent := filepath.Dir(m.Path)

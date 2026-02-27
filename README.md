@@ -15,7 +15,7 @@
 ## How to use 
 
 <div align="center">
-    <img src="./assets/theia_use.png" alt="Project" width="500">
+    <img src="./assets/theia_use.png" alt="Project" width="100%">
 </div>
 
 Once installed you can use

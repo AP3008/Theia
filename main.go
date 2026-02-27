@@ -4,10 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"theia/tui"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 func main (){
@@ -16,6 +18,7 @@ func main (){
 	allFlag := flag.Bool("a", false, "Shows all files")
 	initFlag := flag.Bool("init", false, "Sets up shell integration")
 	cdFlag := flag.Bool("cd", false, "Changes directory on selection")
+	copyFlag := flag.Bool("cp", false, "Copies file path to clipboard")
 
 	flag.Parse()
 
@@ -74,6 +77,18 @@ func main (){
 	}
 	m, ok := finalProg.(tui.Model) 
 	if ok && m.Selected != ""{
-		fmt.Print(m.Selected)
+		if *copyFlag{
+			command := exec.Command("pbcopy")
+			stdin, _ := command.StdinPipe()
+			go func(){
+				defer stdin.Close()
+				fmt.Fprint(stdin, m.Selected)
+			}()
+			command.Run()
+			fmt.Println("\n" + lipgloss.NewStyle().Bold(true).Render("Copied to clipboard:"), lipgloss.NewStyle().Underline(true).Render(m.Selected) + "\n")
+
+		} else {
+			fmt.Print(m.Selected)
+		}
 	}
 }

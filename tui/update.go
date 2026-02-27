@@ -50,6 +50,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Path = curr.Path
 			m.SystemFiles = newFiles
 			m.Cursor = 0
+			m.TopRow = 0
 			m.Selected = m.Path
 
 		case "backspace":
@@ -62,12 +63,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Path = parent
 			m.Selected = m.Path
 			m.Cursor = 0
+			m.TopRow = 0
 		case "enter":
 			if len(m.SystemFiles) > 0 {
 				m.Selected = m.SystemFiles[m.Cursor].Path
 			}
 			return m, tea.Quit
-		case "shift+enter":
+		case "ctrl+o", "alt+enter":
 			m.Selected = m.Path
 			return m, tea.Quit
 		}

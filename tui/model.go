@@ -4,6 +4,8 @@ package tui
 import (
 	"theia/filesystem"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/termenv"
 )
 
 // Defining the configs so I can add more flags easily without crowding the Model struct
@@ -29,6 +31,7 @@ func (m Model) Init() tea.Cmd{
 // Declares the initial model state
 
 func InitialModel(path string, configs Config) (Model, error){
+	lipgloss.SetColorProfile(termenv.TrueColor)
 	fs_list, err := filesystem.CreateSystemFileList(path, configs.ShowHidden)
 	if err != nil{
 		return Model{}, err

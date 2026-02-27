@@ -32,22 +32,22 @@ func main (){
 
 	if *initFlag{
 		fmt.Print(`
-			th(){
-				local target 
-				target=$(command theia "$@")
+th() {
+    local target 
+    target=$(command theia "$@")
 
-				if [ -z "$target" ]; then
-					return 
-				fi
-				if [[ "$*" == *"-cd"* ]]; then
-					if [ -d "$target" ];
-						then cd "$target"
-					fi 
-				else 
-					echo "$target"
-				fi
-			}
-		`)
+    if [ -z "$target" ]; then
+        return 
+    fi
+    if [[ "$*" == *"-cd"* ]]; then
+        if [ -d "$target" ]; then 
+            cd "$target"
+        fi 
+    else 
+        echo "$target"
+    fi
+}
+`) 
 		return 
 	}
 	//Determine the starting dir 
@@ -85,8 +85,7 @@ func main (){
 				fmt.Fprint(stdin, m.Selected)
 			}()
 			command.Run()
-			fmt.Println("\n" + lipgloss.NewStyle().Bold(true).Render("Copied to clipboard:"), lipgloss.NewStyle().Underline(true).Render(m.Selected) + "\n")
-
+			fmt.Fprintln(os.Stderr, "\n"+lipgloss.NewStyle().Bold(true).Render("Copied to clipboard:"), lipgloss.NewStyle().Underline(true).Render(m.Selected)+"\n")
 		} else {
 			fmt.Print(m.Selected)
 		}

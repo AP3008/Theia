@@ -34,14 +34,31 @@ func normalView(m *Model, end int) string{
 }
 
 // Handles -l flag 
-// TODO: ADD BYTE CONVERSION PRIVATE FUNC & BETTER FORMATTING W/ SPACING
 func longView(m *Model, end int)string{
 	var s strings.Builder
 	s.WriteString(fmt.Sprintf("Exlporing: %s\n", m.Path))
 	
 	// Header
-	s.WriteString(fmt.Sprintf("  %-10s %-8s %-12s %s\n", "MODE", "SIZE", "MODIFIED", "NAME"))
-    s.WriteString(strings.Repeat("-", 50) + "\n")
+	//Escape Code for underlined 
+	u := "\033[4m"
+	r := "\033[0m"
+
+	// Column widths
+	const (
+		modeW = 10
+		sizeW = 8
+		modW  = 12
+	)
+
+	s.WriteString("  ") 
+	
+	s.WriteString(fmt.Sprintf("%s%s%s%*s ", u, "MODE", r, modeW-len("MODE"), ""))
+	
+	s.WriteString(fmt.Sprintf("%s%s%s%*s ", u, "SIZE", r, sizeW-len("SIZE"), ""))
+	
+	s.WriteString(fmt.Sprintf("%s%s%s%*s ", u, "MODIFIED", r, modW-len("MODIFIED"), ""))
+	
+	s.WriteString(fmt.Sprintf("%s%s%s\n", u, "NAME", r))
 
 	visibleFiles := m.SystemFiles[m.TopRow:end]
 
@@ -52,9 +69,9 @@ func longView(m *Model, end int)string{
 			cursor = ">"
 		}
 
-		sizeStr := fmt.Sprintf("%d B", file.Size)
-		if file.IsDir{
-			sizeStr = "-"
+		sizeStr := "-"
+		if !file.IsDir{
+			sizeStr = formatBytes(file.Size)
 		}
 		line := fmt.Sprintf("%s %-10s %8s %-12s %s\n",
             cursor,
@@ -67,4 +84,20 @@ func longView(m *Model, end int)string{
 	}
 	s.WriteString("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit\n")
 	return s.String()
+}
+
+// Private helper to format bytes
+
+func formatBytes(bytes int64) string{
+	const unit = 1024
+	if bytes < unit {
+		return fmt.Sprintf("%d B", bytes)
+	}
+	divisor := int64(unit)
+	exponent := 0
+	for n := bytes/unit; n>=unit; n/=unit{
+		divisor *= unit
+		exponent++
+	}
+	return fmt.Sprintf("%.1f %cB",float64(bytes)/float64(divisor), "KMGT"[exponent])
 }

@@ -3,18 +3,14 @@
     <a href="https://en.wikipedia.org/wiki/Theia">
         <img src="./assets/theia.jpeg" alt="Theia" width="350">
     </a>
-</div>
-    <a href="LICENSE">
-        <img src="https://img.shields.io/badge/License-MIT-eb6f92?style=for-the-badge&logo=github" alt="License">
-    </a>
-    <img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Tech Stack">
-    <img src="https://img.shields.io/badge/Platform-macOS-f6c177?style=for-the-badge" alt="Platform" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-eb6f92?style=for-the-badge&logo=github" alt="License"></a><img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Tech Stack"><img src="https://img.shields.io/badge/Platform-macOS-f6c177?style=for-the-badge" alt="Platform" />
     <br />
     <br />
     <blockquote>
         <p>'Theia, the goddess of sight and brilliance'</p>
     </blockquote>
     <p><i>Theia</i> is a terminal based file explorer built with bubble tea.</p>
+</div>
 
 ## How to use 
 

@@ -1,8 +1,53 @@
 package tui
 
-import(
+import (
 	"fmt"
+	"os"
 	"strings"
+	"github.com/charmbracelet/lipgloss"
+)
+
+// Lipgloss defined styles 
+var (
+	// header styling 
+	headerStyle = lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#FAFAFA"))
+		//Padding(0, 1).
+		//MarginBottom(1)
+	
+	// cursor style
+	cursorStyle = lipgloss.NewStyle().
+        Foreground(lipgloss.Color("#EE6FF8")).
+        Bold(true)
+	
+	// Directory Names
+	dirStyle = lipgloss.NewStyle().
+        Foreground(lipgloss.Color("#61AFEF"))
+	
+	// Symlink Names
+	symlinkStyle = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#56B6C2"))
+	
+	// Executable name
+	
+	execStyle = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#98C379"))
+
+	// Regular File name
+	
+	regStyle = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#ABB2BF"))
+
+	// Longview underlined 
+	columnHeaderStyle = lipgloss.NewStyle().
+        Underline(true).
+        Bold(true).
+        Foreground(lipgloss.Color("#ABB2BF"))
+
+	// Design for colour
+	infoStyle = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#82827E"))
 )
 
 func (m Model) View() string{
@@ -20,14 +65,22 @@ func (m Model) View() string{
 func normalView(m *Model, end int) string{
 	var s strings.Builder
 	visibleFiles := m.SystemFiles[m.TopRow:end]
-	s.WriteString(fmt.Sprintf("Exploring: %s\n", m.Path))
+	header := headerStyle.Render(fmt.Sprintf("Exploring: %s\n\n", tildaPath(m.Path)))
+	s.WriteString(header)
 	for i, file := range visibleFiles{
 		actualIndex := i + m.TopRow
 		cursor := " "
 		if m.Cursor == actualIndex{
-			cursor = ">"
+			cursor = cursorStyle.Render("> ")
 		}
-		s.WriteString(fmt.Sprintf("%s %s\n", cursor, file.Name))
+		name := file.Name
+		if file.IsDir{
+			name = dirStyle.Render(file.Name + "/")
+		}
+		if file.IsSymLink{
+			name = 
+		}
+		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
 	}
 	s.WriteString("\n [tab] enter directory [backspace] parent directory [enter] select  [q] quit\n")
 	return s.String()
@@ -36,7 +89,7 @@ func normalView(m *Model, end int) string{
 // Handles -l flag 
 func longView(m *Model, end int)string{
 	var s strings.Builder
-	s.WriteString(fmt.Sprintf("Exlporing: %s\n\n", m.Path))
+	s.WriteString(fmt.Sprintf("Exlporing: %s\n\n", tildaPath(m.Path)))
 	
 	// Header
 	//Escape Code for underlined 
@@ -78,7 +131,7 @@ func longView(m *Model, end int)string{
             file.Permission.String(), 
             sizeStr,
             file.ModifiedTime.Format("Jan 02 15:04"), 
-            file.Name,
+    	        file.Name,
         )
         s.WriteString(line)
 	}
@@ -100,4 +153,17 @@ func formatBytes(bytes int64) string{
 		exponent++
 	}
 	return fmt.Sprintf("%.1f %cB",float64(bytes)/float64(divisor), "KMGT"[exponent])
+}
+
+// Private helper to remove home dir
+
+func tildaPath(path string) string{
+	home, err := os.UserHomeDir()
+	if err != nil{
+		return path 
+	}
+	if strings.HasPrefix(path, home){
+		return strings.Replace(path, home, "~", 1)
+	}
+	return path
 }

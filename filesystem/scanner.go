@@ -37,7 +37,7 @@ func sortDirList(dl []SystemFile) {
 			name1 := strings.ToLower(dl[j].Name)
 			name2 := strings.ToLower(dl[j+1].Name)
 			// Go checks every letter in this comparison
-			if name1 < name2 {
+			if name1 > name2 {
 				tmp := dl[j]
 				dl[j] = dl[j+1]
 				dl[j+1] = tmp

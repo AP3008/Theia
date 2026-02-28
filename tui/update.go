@@ -14,7 +14,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "q":
-			return nil, tea.Quit
+			return m, tea.Quit
 		case "up", "k":
 			if m.Cursor > 0 {
 				m.Cursor--

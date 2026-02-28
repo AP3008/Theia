@@ -13,6 +13,8 @@ type Config struct {
 	ShowDetails bool
 	ShowHidden  bool
 	CDMode      bool
+	FileMode    bool
+	DirMode     bool
 }
 type Model struct {
 	Path        string
@@ -32,7 +34,7 @@ func (m Model) Init() tea.Cmd {
 
 func InitialModel(path string, configs Config) (Model, error) {
 	lipgloss.SetColorProfile(termenv.TrueColor)
-	fs_list, err := filesystem.CreateSystemFileList(path, configs.ShowHidden)
+	fs_list, err := filesystem.CreateSystemFileList(path, configs.ShowHidden, false, false)
 	if err != nil {
 		return Model{}, err
 	}

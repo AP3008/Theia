@@ -26,6 +26,8 @@ func main (){
 		ShowDetails: *longFlag,
 		ShowHidden: *allFlag,
 		CDMode: *cdFlag,
+		FileMode: false,
+		DirMode: false, 
 	}
 
 	// For shell intigration 

@@ -43,7 +43,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			newFiles := m.SystemFiles
 			if curr.IsDir {
 				var err error
-				newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden)
+				newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
 				if err != nil {
 					return m, nil
 				}
@@ -55,9 +55,42 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Selected = m.Path
 			}
 
+		case "d":
+			m.Settings.DirMode = true
+			m.Settings.FileMode = false
+			newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+			if err != nil {
+				return m, nil
+			}
+			m.SystemFiles = newFiles
+			m.TopRow = 0 
+			m.Cursor = 0
+
+		case "f":
+			m.Settings.DirMode = false
+			m.Settings.FileMode = true
+			newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+			if err != nil {
+				return m, nil
+			}
+			m.SystemFiles = newFiles
+			m.TopRow = 0 
+			m.Cursor = 0
+
+		case "n":
+			m.Settings.DirMode = false
+			m.Settings.FileMode = false
+			newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+			if err != nil {
+				return m, nil
+			}
+			m.SystemFiles = newFiles
+			m.TopRow = 0 
+			m.Cursor = 0
+
 		case "backspace":
 			parent := filepath.Dir(m.Path)
-			newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden)
+			newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
 			if err != nil {
 				return m, nil
 			}

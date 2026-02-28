@@ -8,7 +8,7 @@ import (
 )
 
 // We Create a slice of SystemFiles to get a directory in a consumeable format
-func CreateSystemFileList(path string, allFiles bool) ([]SystemFile, error) {
+func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode bool) ([]SystemFile, error) {
 	itemList, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
@@ -22,7 +22,13 @@ func CreateSystemFileList(path string, allFiles bool) ([]SystemFile, error) {
 		if err != nil {
 			fmt.Println("Error:", err, "File:", value.Name())
 		}
-		directoryList = append(directoryList, sf)
+		if fileMode && !sf.IsDir{
+			directoryList = append(directoryList, sf)
+		} else if dirMode && sf.IsDir{
+			directoryList = append(directoryList, sf)
+		} else if !dirMode && !fileMode{
+			directoryList = append(directoryList, sf)
+		}
 	}
 	sortDirList(directoryList)
 	return directoryList, nil

@@ -19,12 +19,12 @@ var (
 
 	// cursor style
 	cursorStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#EE6FF8")).
+			Foreground(lipgloss.Color("#c4a7e7")).
 			Bold(true)
 
 	// Directory Names
 	dirStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#61AFEF"))
+			Foreground(lipgloss.Color("#9ccfd8"))
 
 	// Symlink Names
 	symlinkStyle = lipgloss.NewStyle().
@@ -33,12 +33,12 @@ var (
 	// Executable name
 
 	execStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#98C379"))
+			Foreground(lipgloss.Color("#908caa"))
 
 	// Regular File name
 
 	regStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#ABB2BF"))
+			Foreground(lipgloss.Color("#e0def4"))
 
 	// Design for colour button info
 	infoStyle = lipgloss.NewStyle().

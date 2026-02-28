@@ -15,7 +15,7 @@ func CreateSystemFileList(path string, allFiles bool) ([]SystemFile, error) {
 	}
 	var directoryList []SystemFile
 	for _, value := range itemList {
-		if !allFiles && strings.HasPrefix(value.Name(), "."){
+		if !allFiles && strings.HasPrefix(value.Name(), ".") {
 			continue
 		}
 		sf, err := CreateSystemFile(value, path)

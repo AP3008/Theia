@@ -24,6 +24,8 @@ type Model struct {
 	Settings    Config
 	TopRow      int
 	Height      int
+	Searching   bool
+	SearchTerm  string
 }
 
 func (m Model) Init() tea.Cmd {

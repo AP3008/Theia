@@ -52,5 +52,7 @@ func InitialModel(path string, configs Config) (Model, error) {
 		Settings:    configs,
 		TopRow:      0,
 		Height:      20,
+		Searching: false,
+		SearchTerm: "",
 	}, nil
 }

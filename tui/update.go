@@ -23,6 +23,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.TopRow--
 				}
 			} else {
+				m.TopRow = len(m.SystemFiles) - 20
 				m.Cursor = len(m.SystemFiles) - 1
 			}
 		case "down", "j":
@@ -32,6 +33,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.TopRow++
 				}
 			} else {
+				m.TopRow = 0
 				m.Cursor = 0
 			}
 

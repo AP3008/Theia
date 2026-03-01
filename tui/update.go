@@ -109,8 +109,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.Selected = m.SystemFiles[m.Cursor].Path
 				}
 				return m, tea.Quit
+
 			case "/":
 				m.Searching = true
+				m.Cursor = 0
+				m.TopRow = 0
+
 			case "ctrl+o", "alt+enter":
 				m.Selected = m.Path
 				return m, tea.Quit

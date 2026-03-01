@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	fuzzy "github.com/sahilm/fuzzy"
 )
 
 // We Create a slice of SystemFiles to get a directory in a consumeable format
@@ -34,6 +35,21 @@ func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode boo
 	return directoryList, nil
 }
 
+// Making an custom type to implement Source interace 
+type FileSource []SystemFile
+
+func (f FileSource) String(i int) string{
+	return f[i].Name
+}
+
+func (f FileSource) Len() int {
+	return len(f)
+}
+
+func SearchSystemList(searchTerm string, sfl FileSource) ([]SystemFile, error){
+	newList := fuzzy.FindFrom(searchTerm, sfl)	
+
+}
 // Private helper to help sort the dir list
 // Because we are using slices we don't actually need to pass a reference
 func sortDirList(dl []SystemFile) {

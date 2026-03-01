@@ -13,7 +13,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if m.Searching{
+			switch msg.String(){
+				case "enter":
+					//returns search goes (turns searching off) 
+					return 
+				case "esc":
+					//exits searching clearing the search filter before exit
+					return 
+				case "backspace":
+					//Delete char 
+				default:
+					// append this char to the search string 
+					m.SearchTerm += msg.String()
+					m.SystemFiles = filesystem.SearchSystemList(m.SearchTerm, m.SystemFiles)
 
+
+			}		
 		} else {
 			switch msg.String() {
 			case "ctrl+c", "q":

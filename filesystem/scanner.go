@@ -35,7 +35,7 @@ func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode boo
 	return directoryList, nil
 }
 
-// Making an custom type to implement Source interace 
+// Making a custom type to implement Source interace 
 type FileSource []SystemFile
 
 func (f FileSource) String(i int) string{
@@ -46,9 +46,15 @@ func (f FileSource) Len() int {
 	return len(f)
 }
 
-func SearchSystemList(searchTerm string, sfl FileSource) ([]SystemFile, error){
-	newList := fuzzy.FindFrom(searchTerm, sfl)	
-
+// Handles new fuzzy searched list
+func SearchSystemList(searchTerm string, sfl FileSource) []SystemFile{
+	matches := fuzzy.FindFrom(searchTerm, sfl)	
+	var newList []SystemFile
+	// Gives us a slice of Match structs 
+	for _, val := range matches{
+		newList = append(newList, sfl[val.Index])
+	}
+	return newList
 }
 // Private helper to help sort the dir list
 // Because we are using slices we don't actually need to pass a reference

@@ -54,7 +54,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.TopRow--
 					}
 				} else {
-					m.TopRow = len(m.SystemFiles) - 20
+					tr := len(m.SystemFiles) - 20
+					if tr <= 0{
+						tr = 0
+					}
+					m.TopRow = tr
 					m.Cursor = len(m.SystemFiles) - 1
 				}
 			case "down", "j":

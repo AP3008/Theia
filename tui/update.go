@@ -34,7 +34,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, tea.Quit
 					}
 					newList := filesystem.SearchSystemList(m.SearchInput.Value(), fullList)
-					if len(newList) == 0 {
+					if m.SearchInput.Value() == ""{
 						m.SystemFiles = fullList
 					} else {
 						m.SystemFiles = newList

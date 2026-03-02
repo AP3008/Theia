@@ -54,10 +54,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						m.TopRow--
 					}
 				} else {
-					tr := len(m.SystemFiles) - 20
-					if tr <= 0{
-						tr = 0
-					}
+					tr := max(0,len(m.SystemFiles) - 20)
 					m.TopRow = tr
 					m.Cursor = len(m.SystemFiles) - 1
 				}

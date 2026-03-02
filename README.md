@@ -60,6 +60,8 @@ Hit tab to explore a directory and backspace to go to the parent directory.
 
 Click enter to select a final file path or ctrl+o to select the current directory you are exploring.
 
+**Search Bar**: You can hit '/' to access a search bar that fuzzy finds files in the directory 
+
 ## Installation
 
 **Ensure [Golang](https://go.dev/) is installed**

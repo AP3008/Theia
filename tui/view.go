@@ -91,8 +91,9 @@ func normalView(m *Model, end int) string {
 		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
 		s.WriteString(info)
 	} else {
-		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode \n[/] search mode [q/esc] quit [ctrl+o] return current directory")
-		s.WriteString(info)
+		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode")
+		info2 := infoStyle.Render(" [/] search mode [q/esc] quit [ctrl+o] return current directory")
+		s.WriteString(info + "\n" + info2)
 	}
 	return s.String()
 }
@@ -202,8 +203,9 @@ func longView(m *Model, end int) string {
 		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
 		s.WriteString(info)
 	} else {
-		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode \n[/] search mode [q/esc] quit [ctrl+o] return current directory")
-		s.WriteString(info)
+		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode")
+		info2 := infoStyle.Render(" [/] search mode [q/esc] quit [ctrl+o] return current directory")
+		s.WriteString(info + "\n" + info2)
 	}
 	return s.String()
 }

@@ -77,8 +77,14 @@ func normalView(m *Model, end int) string {
 		}
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
 	}
-	info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] File Mode [d] Directory Mode [n] Normal Mode [q] quit\n [ctrl+o] return current directory")
-	s.WriteString(info)
+	if m.Searching{
+		searchBar := lipgloss.NewStyle().Foreground(iris).Render(m.SearchInput.View())
+		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
+		s.WriteString(searchBar + "\n" + info)
+	} else {
+		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode [/] search mode [q] quit\n [ctrl+o] return current directory")
+		s.WriteString(info)
+	}
 	return s.String()
 }
 
@@ -177,8 +183,15 @@ func longView(m *Model, end int) string {
 		)
 		s.WriteString(line + "\n")
 	}
-	info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] File Mode [d] Directory Mode [n] Normal Mode [q] quit\n [ctrl+o] return current directory")
-	s.WriteString(info)
+
+	if m.Searching{
+		searchBar := lipgloss.NewStyle().Foreground(iris).Render(m.SearchInput.View())
+		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
+		s.WriteString(searchBar + "\n" + info)
+	} else {
+		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode [/] search mode [q] quit\n [ctrl+o] return current directory")
+		s.WriteString(info)
+	}
 	return s.String()
 }
 

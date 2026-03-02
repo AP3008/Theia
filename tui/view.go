@@ -69,8 +69,8 @@ func normalView(m *Model, end int) string {
 	s.WriteString(header + "\n")
 
 	if m.Searching{
-		searchBar := searchStyle.Render(m.SearchInput.Value())
-		s.WriteString(lipgloss.NewStyle().Bold(true).Render("  Searching: ") + searchBar + "\n")
+		searchBar := searchStyle.Render(m.SearchInput.View())
+		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
 	}
 	for i, file := range visibleFiles {
 		actualIndex := i + m.TopRow
@@ -132,7 +132,7 @@ func longView(m *Model, end int) string {
 
 	if m.Searching{
 		searchBar := searchStyle.Render(m.SearchInput.View())
-		s.WriteString(lipgloss.NewStyle().Bold(true).Render("  Searching: ") + searchBar + "\n")
+		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
 	}
 
 	// Header

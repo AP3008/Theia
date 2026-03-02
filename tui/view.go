@@ -42,8 +42,8 @@ var (
 
 	// Search bar styling
 	searchStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#e0def4")).
-		Background(lipgloss.Color("##1f1d2e"))
+			Foreground(lipgloss.Color("#e0def4")).
+			Background(lipgloss.Color("##1f1d2e"))
 
 	// Design for colour button info
 	infoStyle = lipgloss.NewStyle().
@@ -68,7 +68,7 @@ func normalView(m *Model, end int) string {
 	header := headerStyle.Render(fmt.Sprintf("  Exploring: " + tildaPath(m.Path)))
 	s.WriteString(header + "\n")
 
-	if m.Searching{
+	if m.Searching {
 		searchBar := searchStyle.Render(m.SearchInput.View())
 		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
 	}
@@ -87,11 +87,11 @@ func normalView(m *Model, end int) string {
 		}
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
 	}
-	if m.Searching{
+	if m.Searching {
 		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
 		s.WriteString(info)
 	} else {
-		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode [/] search mode [q] quit\n [ctrl+o] return current directory")
+		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode \n[/] search mode [q/esc] quit [ctrl+o] return current directory")
 		s.WriteString(info)
 	}
 	return s.String()
@@ -130,7 +130,7 @@ func longView(m *Model, end int) string {
 	explorer := headerStyle.Render(fmt.Sprintf("  Exploring: " + tildaPath(m.Path)))
 	s.WriteString(explorer + "\n")
 
-	if m.Searching{
+	if m.Searching {
 		searchBar := searchStyle.Render(m.SearchInput.View())
 		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
 	}
@@ -198,11 +198,11 @@ func longView(m *Model, end int) string {
 		s.WriteString(line + "\n")
 	}
 
-	if m.Searching{
+	if m.Searching {
 		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
 		s.WriteString(info)
 	} else {
-		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode [/] search mode [q] quit\n [ctrl+o] return current directory")
+		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode \n[/] search mode [q/esc] quit [ctrl+o] return current directory")
 		s.WriteString(info)
 	}
 	return s.String()

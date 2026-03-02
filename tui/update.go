@@ -44,7 +44,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}		
 		} else {
 			switch msg.String() {
-			case "ctrl+c", "q":
+			case "ctrl+c", "q", "esc":
 				m.Selected = ""
 				return m, tea.Quit
 			case "up", "k":

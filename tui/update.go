@@ -14,47 +14,27 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		if m.Searching{
 			switch msg.String(){
-				case "enter":
-					//returns search goes (turns searching off) 
-					if len(m.SystemFiles) == 0{
+				case "enter", "esc":
+					//returns search goes (turns searching off)
+					m.Searching = false
+					m.SearchInput.Blur()
+					if len(m.SystemFiles) == 0 || msg.String() == "esc"{
 						originalList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
 						if err != nil{
 							return m, tea.Quit
 						}
 						m.SystemFiles = originalList
 					}
-					m.SearchTerm = ""
-					m.Searching = false
-				case "esc":
-					//exits searching clearing the search filter before exit
-					originalList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
-					if err != nil{
-						return m, tea.Quit
-					}
-					m.SystemFiles = originalList
-					m.SearchTerm = ""
-					m.Searching = false
-				case "backspace":
-					//Delete char 
-					m.SearchTerm = m.SearchTerm[:len(m.SearchTerm)-1]
-					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode) 
-					if err != nil{
-						return m, tea.Quit
-					}
-					newFiles := filesystem.SearchSystemList(m.SearchTerm, fullList)
-					m.TopRow = 0
-					m.Cursor = 0
-					m.SystemFiles = newFiles
-
 				default:
 					// append this char to the search string 
-					m.SearchTerm += msg.String()
-					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode) 
+					m.SearchInput, _ = m.SearchInput.Update(msg)
+					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+
 					if err != nil{
 						return m, tea.Quit
 					}
-					newFiles := filesystem.SearchSystemList(m.SearchTerm, fullList)
-					m.SystemFiles = newFiles
+					newList := filesystem.SearchSystemList(m.SearchInput.Value(), fullList)
+					m.SystemFiles = newList
 					m.Cursor = 0
 					m.TopRow = 0
 			}		
@@ -156,6 +136,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			case "/":
 				m.Searching = true
+				m.SearchInput.Focus()
 				m.Cursor = 0
 				m.TopRow = 0
 

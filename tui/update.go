@@ -25,6 +25,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						}
 						m.SystemFiles = originalList
 					}
+					m.SearchInput.Reset()
 				default:
 					// append this char to the search string 
 					m.SearchInput, _ = m.SearchInput.Update(msg)

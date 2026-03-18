@@ -65,7 +65,7 @@ func (m Model) View() string {
 func fullSearchView(m *Model, end int) string {
 	var s strings.Builder
 	visibleFiles := m.SystemFiles[m.TopRow:end]
-	header := headerStyle.Render(fmt.Sprintf("  Exploring: ", tildaPath(m.Path)))
+	header := headerStyle.Render(fmt.Sprintf("  Exploring: %s", tildaPath(m.Path)))
 	s.WriteString(header + "\n")
 	searchBar := searchStyle.Render(m.SearchInput.View())
 	for i, file := range visibleFiles {
@@ -84,7 +84,8 @@ func fullSearchView(m *Model, end int) string {
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
 	}
 		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
-
+		info := infoStyle.Render("\n [enter] submit [esc] leave search")
+		s.WriteString(info)
 	return s.String()
 }
 
@@ -93,7 +94,10 @@ func normalView(m *Model, end int) string {
 	visibleFiles := m.SystemFiles[m.TopRow:end]
 	header := headerStyle.Render(fmt.Sprintf("  Exploring: " + tildaPath(m.Path)))
 	s.WriteString(header + "\n")
-	if m.Searching {
+	if m.FullSearch {
+		fsv := fullSearchView(m, end)
+		return fsv
+	}else if m.Searching {
 		searchBar := searchStyle.Render(m.SearchInput.View())
 		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
 	}
@@ -113,7 +117,7 @@ func normalView(m *Model, end int) string {
 		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
 	}
 	if m.Searching {
-		info := infoStyle.Render("\n [enter] submit search [esc] leave search")
+		info := infoStyle.Render("\n [enter] submit search [esc] leave search [/] full search")
 		s.WriteString(info)
 	} else {
 		info := infoStyle.Render("\n [tab] enter directory [backspace] parent directory [enter] select  [f] file Mode [d] directory Mode [n] normal Mode")

@@ -21,7 +21,7 @@ func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode boo
 	var directoryList []SystemFile
 	for _, value := range itemList {
 		if fullList {
-			if value.IsDir(){
+			if value.IsDir() && strings.HasPrefix(value.Name(), "."){
 				fp := filepath.Join(path, value.Name())
 				recursiveList, err := CreateSystemFileList(fp,
 				allFiles,

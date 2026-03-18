@@ -18,16 +18,17 @@ type Config struct {
 	DirMode     bool
 }
 type Model struct {
-	Path        string
-	SystemFiles []filesystem.SystemFile
-	Cursor      int
-	Selected    string
-	Settings    Config
-	TopRow      int
-	Height      int
-	Searching   bool
-	FullSearch  bool
-	SearchInput textinput.Model
+	Path             string
+	SystemFiles      []filesystem.SystemFile
+	Cursor           int
+	Selected         string
+	Settings         Config
+	TopRow           int
+	Height           int
+	Searching        bool
+	FullSearch       bool
+	FullSearchCache  []filesystem.SystemFile
+	SearchInput      textinput.Model
 }
 
 func (m Model) Init() tea.Cmd {

@@ -18,9 +18,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				case "enter", "esc", "down":
 					m.Searching = false
 					m.FullSearch = false
+					m.FullSearchCache = nil
 					m.SearchInput.Blur()
 					if len(m.SystemFiles) == 0 || msg.String() == "esc"{
-						originalList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
+						originalList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, false)
 						if err != nil{
 							return m, tea.Quit
 						}
@@ -28,22 +29,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 					m.SearchInput.Reset()
 				default:
-					// append this char to the search string 
+					// append this char to the search string
 					m.SearchInput, _ = m.SearchInput.Update(msg)
-					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
-
-					if err != nil{
-						return m, tea.Quit
-					}
-					newList := filesystem.SearchSystemList(m.SearchInput.Value(), fullList)
+					newList := filesystem.SearchSystemList(m.SearchInput.Value(), m.FullSearchCache)
 					if m.SearchInput.Value() == ""{
-						m.SystemFiles = fullList
+						m.SystemFiles = m.FullSearchCache
 					} else {
 						m.SystemFiles = newList
 					}
 					m.Cursor = 0
 					m.TopRow = 0
-			}	
+			}
 		} else if m.Searching{
 			switch msg.String(){
 				case "enter", "esc":
@@ -59,9 +55,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 					m.SearchInput.Reset()
 				case "/":
-					//Full search enabled 
+					//Full search enabled
 					m.FullSearch = true
-					newList, err := filesystem.CreateSystemFileList(
+					cachedList, err := filesystem.CreateSystemFileList(
 						m.Path,
 						m.Settings.ShowHidden,
 						false,
@@ -71,10 +67,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					if err != nil {
 						return m, tea.Quit
 					}
-					m.SystemFiles = newList 
+					m.FullSearchCache = cachedList
+					m.SystemFiles = cachedList
 					m.SearchInput.Reset()
 				default:
-					// append this char to the search string 
+					// append this char to the search string
 					m.SearchInput, _ = m.SearchInput.Update(msg)
 					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 
@@ -89,7 +86,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 					m.Cursor = 0
 					m.TopRow = 0
-			}		
+			}
 		} else {
 			switch msg.String() {
 			case "ctrl+c", "q", "esc":
@@ -145,7 +142,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, nil
 				}
 				m.SystemFiles = newFiles
-				m.TopRow = 0 
+				m.TopRow = 0
 				m.Cursor = 0
 
 			case "f":
@@ -156,7 +153,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, nil
 				}
 				m.SystemFiles = newFiles
-				m.TopRow = 0 
+				m.TopRow = 0
 				m.Cursor = 0
 
 			case "n":
@@ -167,7 +164,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, nil
 				}
 				m.SystemFiles = newFiles
-				m.TopRow = 0 
+				m.TopRow = 0
 				m.Cursor = 0
 
 			case "backspace":

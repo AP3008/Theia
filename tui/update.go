@@ -9,12 +9,13 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+//TODO: add file naviagtion while doing full search
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if m.Searching && m.FullSearch {
 			switch msg.String(){
-				case "enter", "esc":
+				case "enter", "esc", "down":
 					m.Searching = false
 					m.FullSearch = false
 					m.SearchInput.Blur()

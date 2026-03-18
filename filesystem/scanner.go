@@ -4,31 +4,55 @@ package filesystem
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+
 	fuzzy "github.com/sahilm/fuzzy"
 )
 
 // We Create a slice of SystemFiles to get a directory in a consumeable format
-func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode bool) ([]SystemFile, error) {
+func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode bool, fullList bool) ([]SystemFile, error) {
 	itemList, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 	var directoryList []SystemFile
 	for _, value := range itemList {
-		if !allFiles && strings.HasPrefix(value.Name(), ".") {
-			continue
-		}
-		sf, err := CreateSystemFile(value, path)
-		if err != nil {
-			fmt.Println("Error:", err, "File:", value.Name())
-		}
-		if fileMode && !sf.IsDir{
-			directoryList = append(directoryList, sf)
-		} else if dirMode && sf.IsDir{
-			directoryList = append(directoryList, sf)
-		} else if !dirMode && !fileMode{
-			directoryList = append(directoryList, sf)
+		if fullList {
+			if value.IsDir(){
+				fp := filepath.Join(path, value.Name())
+				recursiveList, err := CreateSystemFileList(fp,
+				allFiles,
+				fileMode,
+				dirMode,
+				fullList,
+			)
+			if err != nil{
+				return nil, err
+			}
+				directoryList = append(directoryList, recursiveList...)
+			} else {
+				sf, err := CreateSystemFile(value, path)
+				if err != nil {
+					return nil, err 
+				}
+				directoryList = append(directoryList, sf)
+			}
+		} else {
+			if !allFiles && strings.HasPrefix(value.Name(), ".") {
+				continue
+			}
+			sf, err := CreateSystemFile(value, path)
+			if err != nil {
+				fmt.Println("Error:", err, "File:", value.Name())
+			}
+			if fileMode && !sf.IsDir{
+				directoryList = append(directoryList, sf)
+			} else if dirMode && sf.IsDir{
+				directoryList = append(directoryList, sf)
+			} else if !dirMode && !fileMode{
+				directoryList = append(directoryList, sf)
+			}
 		}
 	}
 	sortDirList(directoryList)

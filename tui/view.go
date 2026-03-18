@@ -62,12 +62,37 @@ func (m Model) View() string {
 	return str
 }
 
+func fullSearchView(m *Model, end int) string {
+	var s strings.Builder
+	visibleFiles := m.SystemFiles[m.TopRow:end]
+	header := headerStyle.Render(fmt.Sprintf("  Exploring: ", tildaPath(m.Path)))
+	s.WriteString(header + "\n")
+	searchBar := searchStyle.Render(m.SearchInput.View())
+	for i, file := range visibleFiles {
+		actualIndex := i + m.TopRow
+		cursor := " "
+		if m.Cursor == actualIndex {
+			cursor = cursorStyle.Render("> ")
+		}
+		name := regStyle.Render(file.Name)
+		if file.IsDir {
+			name = dirStyle.Render(file.Name + "/")
+		}
+		if file.IsSymLink {
+			name = symlinkStyle.Render(name)
+		}
+		s.WriteString(fmt.Sprintf("%s %s\n", cursor, name))
+	}
+		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")
+
+	return s.String()
+}
+
 func normalView(m *Model, end int) string {
 	var s strings.Builder
 	visibleFiles := m.SystemFiles[m.TopRow:end]
 	header := headerStyle.Render(fmt.Sprintf("  Exploring: " + tildaPath(m.Path)))
 	s.WriteString(header + "\n")
-
 	if m.Searching {
 		searchBar := searchStyle.Render(m.SearchInput.View())
 		s.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#f6c177")).Render("  Searching ") + searchBar + "\n")

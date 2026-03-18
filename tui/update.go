@@ -19,17 +19,32 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.Searching = false
 					m.SearchInput.Blur()
 					if len(m.SystemFiles) == 0 || msg.String() == "esc"{
-						originalList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+						originalList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 						if err != nil{
 							return m, tea.Quit
 						}
 						m.SystemFiles = originalList
 					}
 					m.SearchInput.Reset()
+				case "ctrl+S":
+					//Full search enabled 
+					m.FullSearch = true
+					newList, err := filesystem.CreateSystemFileList(
+						m.Path,
+						m.Settings.ShowHidden,
+						false,
+						false,
+						m.FullSearch,
+					)
+					if err != nil {
+						return m, tea.Quit
+					}
+					m.SystemFiles = newList 
+					m.SearchInput.Reset()
 				default:
 					// append this char to the search string 
 					m.SearchInput, _ = m.SearchInput.Update(msg)
-					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+					fullList, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 
 					if err != nil{
 						return m, tea.Quit
@@ -78,7 +93,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				newFiles := m.SystemFiles
 				if curr.IsDir {
 					var err error
-					newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+					newFiles, err = filesystem.CreateSystemFileList(curr.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 					if err != nil {
 						return m, nil
 					}
@@ -93,7 +108,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "d":
 				m.Settings.DirMode = true
 				m.Settings.FileMode = false
-				newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+				newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 				if err != nil {
 					return m, nil
 				}
@@ -104,7 +119,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "f":
 				m.Settings.DirMode = false
 				m.Settings.FileMode = true
-				newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+				newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 				if err != nil {
 					return m, nil
 				}
@@ -115,7 +130,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "n":
 				m.Settings.DirMode = false
 				m.Settings.FileMode = false
-				newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+				newFiles, err := filesystem.CreateSystemFileList(m.Path, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 				if err != nil {
 					return m, nil
 				}
@@ -125,7 +140,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			case "backspace":
 				parent := filepath.Dir(m.Path)
-				newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode)
+				newFiles, err := filesystem.CreateSystemFileList(parent, m.Settings.ShowHidden, m.Settings.FileMode, m.Settings.DirMode, m.FullSearch)
 				if err != nil {
 					return m, nil
 				}

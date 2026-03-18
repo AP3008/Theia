@@ -1,4 +1,5 @@
 // This file handles scanning all of the files in a directory
+
 package filesystem
 
 import (
@@ -11,6 +12,7 @@ import (
 )
 
 // We Create a slice of SystemFiles to get a directory in a consumeable format
+
 func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode bool, fullList bool) ([]SystemFile, error) {
 	itemList, err := os.ReadDir(path)
 	if err != nil {
@@ -60,6 +62,7 @@ func CreateSystemFileList(path string, allFiles bool, fileMode bool, dirMode boo
 }
 
 // Making a custom type to implement Source interace 
+
 type FileSource []SystemFile
 
 func (f FileSource) String(i int) string{
@@ -71,6 +74,7 @@ func (f FileSource) Len() int {
 }
 
 // Handles new fuzzy searched list
+
 func SearchSystemList(searchTerm string, sfl FileSource) []SystemFile{
 	matches := fuzzy.FindFrom(searchTerm, sfl)	
 	var newList []SystemFile

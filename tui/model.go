@@ -2,10 +2,10 @@
 package tui
 
 import (
+	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/termenv"
-	"github.com/charmbracelet/bubbles/textinput"
 	"theia/filesystem"
 )
 
@@ -26,6 +26,7 @@ type Model struct {
 	TopRow      int
 	Height      int
 	Searching   bool
+	FullSearch  bool
 	SearchInput textinput.Model
 }
 
@@ -37,7 +38,7 @@ func (m Model) Init() tea.Cmd {
 
 func InitialModel(path string, configs Config) (Model, error) {
 	lipgloss.SetColorProfile(termenv.TrueColor)
-	fs_list, err := filesystem.CreateSystemFileList(path, configs.ShowHidden, false, false)
+	fs_list, err := filesystem.CreateSystemFileList(path, configs.ShowHidden, false, false, false)
 	if err != nil {
 		return Model{}, err
 	}
@@ -47,9 +48,9 @@ func InitialModel(path string, configs Config) (Model, error) {
 	}
 
 	ti := textinput.New()
-    ti.Placeholder = "Search..."
-    ti.CharLimit = 64
-    ti.Width = 30
+	ti.Placeholder = "Search..."
+	ti.CharLimit = 64
+	ti.Width = 30
 	return Model{
 		Path:        path,
 		SystemFiles: fs_list,
@@ -58,7 +59,7 @@ func InitialModel(path string, configs Config) (Model, error) {
 		Settings:    configs,
 		TopRow:      0,
 		Height:      20,
-		Searching: false,
+		Searching:   false,
 		SearchInput: ti,
 	}, nil
 }
